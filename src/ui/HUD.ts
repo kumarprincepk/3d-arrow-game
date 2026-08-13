@@ -62,7 +62,7 @@ export class HUD {
 
       <!-- Controls Hint for Mobile, Tablet, Laptop & Desktop -->
       <div class="hud-controls-hint" id="hud-controls-hint">
-        🎯 <strong>HOW TO PLAY:</strong> Tap / Swipe glowing <strong>Cyan Target Arrow</strong> OR press <strong>Arrow Keys (⬆️ ⬇️ ⬅️ ➡️ / W A S D)</strong>!
+        🎯 <strong>HOW TO PLAY:</strong> Tap / Click glowing <strong>Cyan Target Arrow</strong> OR press <strong>W A S D / Arrow Keys (Space for 3D Circles)</strong>!
       </div>
 
       <!-- Countdown Overlay -->

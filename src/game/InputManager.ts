@@ -139,6 +139,22 @@ export class InputManager {
         case 'D':
           keyDir = 'RIGHT';
           break;
+        case ' ':
+        case 'Spacebar':
+        case 'e':
+        case 'E':
+        case 'f':
+        case 'F':
+        case 'Enter':
+          keyDir = 'FORWARD';
+          break;
+        case 'q':
+        case 'Q':
+        case 'b':
+        case 'B':
+        case 'Shift':
+          keyDir = 'BACKWARD';
+          break;
       }
 
       if (keyDir) {

@@ -117,7 +117,10 @@ export class Game {
       if (this.gameState.mode !== StateMode.PLAYING) return;
       const targetArrow = this.levelManager.activeTargetArrow;
 
-      if (targetArrow && targetArrow.active && targetArrow.directionKey === keyDirection) {
+      const isDepthArrow = targetArrow?.directionKey === 'FORWARD' || targetArrow?.directionKey === 'BACKWARD';
+      const isDepthKey = keyDirection === 'FORWARD' || keyDirection === 'BACKWARD';
+
+      if (targetArrow && targetArrow.active && (targetArrow.directionKey === keyDirection || (isDepthArrow && isDepthKey))) {
         this.handleArrowClick(targetArrow);
       } else {
         this.gameState.emit('showToast', { message: '🎯 MATCH THE GLOWING CYAN ARROW!' });
