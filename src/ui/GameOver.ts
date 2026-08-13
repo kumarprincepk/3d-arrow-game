@@ -48,6 +48,9 @@ export class GameOver {
         </div>
 
         <div class="menu-button-group">
+          <!-- Rewarded Video Ad: +2 Extra Lives -->
+          <button class="btn btn-gold" id="btn-rewarded-lives">🎬 WATCH AD FOR +2 LIVES & CONTINUE!</button>
+
           <!-- Restart Level Button (Allows up to 3 attempts) -->
           <button class="btn btn-primary" id="btn-restart-level">
             RESTART LEVEL (<span id="go-restarts-left">3</span>/3)
@@ -75,6 +78,26 @@ export class GameOver {
         this.updateStats();
       } else {
         this.element.classList.add('hidden');
+      }
+    });
+
+    const rewardedLivesBtn = document.getElementById('btn-rewarded-lives') as HTMLButtonElement;
+    rewardedLivesBtn?.addEventListener('click', () => {
+      this.game.audioManager.playHover();
+      if (this.game.platformAdapter.requestRewardedAd) {
+        this.game.platformAdapter.requestRewardedAd(
+          () => {
+            // Reward: Restore +2 Lives & Continue current level!
+            this.game.lifeManager.addLife();
+            this.game.lifeManager.addLife();
+            this.game.gameState.emit('showToast', { message: '❤️ REWARD UNLOCKED: +2 EXTRA LIVES RESTORED!' });
+            this.game.audioManager.playSpecial();
+            this.game.startLevel(this.game.gameState.level);
+          },
+          () => {
+            this.game.gameState.emit('showToast', { message: '⚠️ Ad unavailable. Try again!' });
+          }
+        );
       }
     });
 

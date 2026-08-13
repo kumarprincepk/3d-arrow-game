@@ -36,6 +36,10 @@ export class LevelComplete {
           </div>
         </div>
 
+        <div class="rewarded-ad-box">
+          <button class="btn btn-gold" id="btn-double-score">🎬 DOUBLE SCORE (2X)!</button>
+        </div>
+
         <button class="btn btn-primary" id="btn-next-level">NEXT LEVEL ➜</button>
       </div>
     `;
@@ -48,14 +52,50 @@ export class LevelComplete {
       if (mode === StateMode.LEVEL_COMPLETE) {
         this.element.classList.remove('hidden');
         this.updateStats();
+        if (this.game.platformAdapter.requestBanner) {
+          this.game.platformAdapter.requestBanner('banner-container-lc');
+        }
       } else {
         this.element.classList.add('hidden');
+        if (this.game.platformAdapter.clearAllBanners) {
+          this.game.platformAdapter.clearAllBanners();
+        }
+      }
+    });
+
+    const doubleScoreBtn = document.getElementById('btn-double-score') as HTMLButtonElement;
+    doubleScoreBtn?.addEventListener('click', () => {
+      this.game.audioManager.playHover();
+      if (this.game.platformAdapter.requestRewardedAd) {
+        this.game.platformAdapter.requestRewardedAd(
+          () => {
+            // Reward: Double the current session score!
+            const bonus = this.game.gameState.score;
+            this.game.gameState.score += bonus;
+            this.game.gameState.emit('scoreUpdate', { score: this.game.gameState.score, added: bonus });
+            this.game.audioManager.playSpecial();
+            this.game.gameState.emit('showToast', { message: '🌟 REWARD UNLOCKED: 2X SCORE DOUBLED!' });
+            if (doubleScoreBtn) {
+              doubleScoreBtn.disabled = true;
+              doubleScoreBtn.textContent = '✅ 2X SCORE CLAIMED!';
+            }
+          },
+          () => {
+            this.game.gameState.emit('showToast', { message: '⚠️ Ad unavailable. Try again!' });
+          }
+        );
       }
     });
 
     document.getElementById('btn-next-level')?.addEventListener('click', () => {
       this.game.audioManager.playHover();
-      this.game.startLevel(this.game.gameState.level + 1);
+      if (this.game.platformAdapter.requestMidgameAd) {
+        this.game.platformAdapter.requestMidgameAd(() => {
+          this.game.startLevel(this.game.gameState.level + 1);
+        });
+      } else {
+        this.game.startLevel(this.game.gameState.level + 1);
+      }
     });
   }
 

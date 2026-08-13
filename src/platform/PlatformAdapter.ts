@@ -6,6 +6,8 @@ export interface IPlatformAdapter {
   happyTime(): void;
   requestMidgameAd?(onComplete?: () => void): void;
   requestRewardedAd?(onSuccess?: () => void, onFailure?: () => void): void;
+  requestBanner?(containerId: string): void;
+  clearAllBanners?(): void;
   onPause(callback: () => void): void;
   onResume(callback: () => void): void;
 }
@@ -32,6 +34,9 @@ export class StandaloneAdapter implements IPlatformAdapter {
   public gameplayStart(): void {}
   public gameplayStop(): void {}
   public happyTime(): void {}
+
+  public requestBanner(_containerId: string): void {}
+  public clearAllBanners(): void {}
 
   public onPause(callback: () => void): void {
     this.pauseCallbacks.push(callback);
@@ -69,6 +74,7 @@ export class CrazyGamesAdapter implements IPlatformAdapter {
   }
 
   public gameplayStart(): void {
+    this.clearAllBanners();
     if (this.sdk?.gameplay?.gameplayStart) {
       this.sdk.gameplay.gameplayStart();
     }
@@ -127,6 +133,26 @@ export class CrazyGamesAdapter implements IPlatformAdapter {
       });
     } else {
       if (onSuccess) onSuccess();
+    }
+  }
+
+  public requestBanner(containerId: string): void {
+    if (this.sdk?.banner?.requestResponsiveBanner) {
+      try {
+        this.sdk.banner.requestResponsiveBanner(containerId);
+      } catch (e) {
+        console.warn('CrazyGames Banner Error:', e);
+      }
+    }
+  }
+
+  public clearAllBanners(): void {
+    if (this.sdk?.banner?.clearAllBanners) {
+      try {
+        this.sdk.banner.clearAllBanners();
+      } catch (e) {
+        console.warn('CrazyGames Clear Banner Error:', e);
+      }
     }
   }
 

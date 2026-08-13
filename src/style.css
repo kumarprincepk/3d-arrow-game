@@ -183,6 +183,37 @@ canvas {
   transform: translateY(-2px);
 }
 
+.btn-gold {
+  background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+  color: #050510;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  animation: goldPulse 2s infinite ease-in-out;
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 35px rgba(255, 215, 0, 0.85);
+}
+
+.btn-gold:disabled {
+  opacity: 0.6;
+  animation: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@keyframes goldPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+  50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(255, 215, 0, 0.75); }
+}
+
+.rewarded-ad-box {
+  margin: 14px 0;
+  width: 100%;
+}
+
 .btn-icon {
   background: transparent;
   color: #94a3b8;
