@@ -88,8 +88,8 @@ export class CrazyGamesAdapter implements IPlatformAdapter {
 
   public requestMidgameAd(onComplete?: () => void): void {
     if (this.sdk?.ad?.requestAd) {
-      this.sdk.ad.requestAd('midgame', {
-        adStarted: () => console.log('CrazyGames Midgame Ad started'),
+      const callbacks = {
+        adStarted: () => console.log('CrazyGames Midroll Ad started'),
         adFinished: () => {
           if (onComplete) onComplete();
         },
@@ -97,7 +97,17 @@ export class CrazyGamesAdapter implements IPlatformAdapter {
           console.warn('CrazyGames Ad Error:', error);
           if (onComplete) onComplete();
         }
-      });
+      };
+
+      try {
+        this.sdk.ad.requestAd('midroll', callbacks);
+      } catch (e) {
+        try {
+          this.sdk.ad.requestAd('midgame', callbacks);
+        } catch (e2) {
+          if (onComplete) onComplete();
+        }
+      }
     } else {
       if (onComplete) onComplete();
     }
